@@ -1,5 +1,8 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addBooking } from "../redux/bookingsSlice";
 import "./styles.css";
 
 import generalImage from "../assets/general.jpg";
@@ -10,6 +13,7 @@ import deluxeImage from "../assets/delux.jpg";
 
 function RoomBook() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [roomType, setRoomType] = useState("");
   const [days, setDays] = useState("");
@@ -25,7 +29,7 @@ function RoomBook() {
       description:
         "A comfortable shared ward with essential medical facilities and 24/7 nursing.",
       details: "Shared Room • Basic Facilities",
-      price: 1500,
+      price: 1500
     },
 
     sharing: {
@@ -34,7 +38,7 @@ function RoomBook() {
       description:
         "A comfortable room shared with another patient with curtain privacy.",
       details: "2 Beds • Shared Bathroom",
-      price: 2500,
+      price: 2500
     },
 
     private: {
@@ -43,7 +47,7 @@ function RoomBook() {
       description:
         "A peaceful private room offering seclusion, personal comfort, and quiet recovery.",
       details: "1 Bed • Attached Bathroom",
-      price: 4000,
+      price: 4000
     },
 
     ac: {
@@ -52,7 +56,7 @@ function RoomBook() {
       description:
         "An air-conditioned private room with modern climate control and amenities.",
       details: "1 Bed • AC • Attached Bathroom",
-      price: 6000,
+      price: 6000
     },
 
     deluxe: {
@@ -61,14 +65,13 @@ function RoomBook() {
       description:
         "A premium luxury room with upgraded amenities, attendant lounge, and VIP care.",
       details: "1 Bed • AC • Bathroom • TV • Lounge",
-      price: 8000,
-    },
+      price: 8000
+    }
   };
 
   const selectedRoom = roomType ? rooms[roomType] : null;
 
-  const daysCount =
-    Number(days) > 0 ? Number(days) : 0;
+  const daysCount = Number(days) > 0 ? Number(days) : 0;
 
   const totalPrice =
     selectedRoom && daysCount > 0
@@ -104,7 +107,7 @@ function RoomBook() {
     }
 
     const booking = {
-      id: new Date().getTime(),
+      id: Date.now(),
       type: "Room",
       patientName: patientName.trim(),
       room: selectedRoom.name,
@@ -114,335 +117,163 @@ function RoomBook() {
       total: totalPrice,
       contact: contact.trim(),
       requirements: requirements.trim() || "Standard care",
+      status: "Confirmed"
     };
 
-    let bookings = [];
-
-    try {
-      const savedBookings =
-        localStorage.getItem("bookings");
-
-      if (savedBookings) {
-        const parsedBookings =
-          JSON.parse(savedBookings);
-
-        if (Array.isArray(parsedBookings)) {
-          bookings = parsedBookings;
-        }
-      }
-    } catch (error) {
-      console.error(
-        "Error reading bookings:",
-        error
-      );
-    }
-
-    bookings.push(booking);
-
-    localStorage.setItem(
-      "bookings",
-      JSON.stringify(bookings)
-    );
+    dispatch(addBooking(booking));
 
     alert("Room booked successfully!");
-
     navigate("/bookings");
   }
 
   return (
     <div className="room-page">
-
       <div className="room-container">
-
         <div className="room-header">
-
-          <p className="room-small-title">
-            ÉLAN VIE HOSPITALS
-          </p>
-
+          <p className="room-small-title">ÉLAN VIE HOSPITALS</p>
           <h1>Book a Hospital Room</h1>
-
           <p>
-            Choose a room according to your
-            comfort and care requirements.
+            Choose a room according to your comfort and care requirements.
           </p>
-
         </div>
 
-
-        <form
-          className="room-card"
-          onSubmit={handleRoomSubmit}
-        >
-
-          <h2>
-            Room Admission Details
-          </h2>
-
+        <form className="room-card" onSubmit={handleRoomSubmit}>
+          <h2>Room Admission Details</h2>
 
           <div className="room-field">
-
             <label htmlFor="room-patient-input">
               Patient Name *
             </label>
-
             <input
               id="room-patient-input"
               type="text"
               placeholder="Enter patient name"
               value={patientName}
-              onChange={(e) =>
-                setPatientName(e.target.value)
-              }
+              onChange={(e) => setPatientName(e.target.value)}
               required
             />
-
           </div>
 
-
           <div className="room-field">
-
             <label htmlFor="room-type-select">
               Select Room Type *
             </label>
-
             <select
               id="room-type-select"
               value={roomType}
-              onChange={(e) =>
-                setRoomType(e.target.value)
-              }
+              onChange={(e) => setRoomType(e.target.value)}
               required
             >
-
-              <option value="">
-                Select Room Type
-              </option>
-
-              <option value="general">
-                General Ward
-              </option>
-
-              <option value="sharing">
-                Sharing Room
-              </option>
-
-              <option value="private">
-                Private Room
-              </option>
-
-              <option value="ac">
-                AC Private Room
-              </option>
-
-              <option value="deluxe">
-                Deluxe Suite Room
-              </option>
-
+              <option value="">Select Room Type</option>
+              <option value="general">General Ward</option>
+              <option value="sharing">Sharing Room</option>
+              <option value="private">Private Room</option>
+              <option value="ac">AC Private Room</option>
+              <option value="deluxe">Deluxe Suite Room</option>
             </select>
-
           </div>
 
-
           {selectedRoom && (
-
             <div className="room-preview">
-
               <div className="room-image">
-
-                <img
-                  src={selectedRoom.image}
-                  alt={selectedRoom.name}
-                />
-
+                <img src={selectedRoom.image} alt={selectedRoom.name} />
               </div>
-
 
               <div className="room-preview-info">
-
-                <p className="preview-label">
-                  SELECTED ROOM
-                </p>
-
-                <h3>
-                  {selectedRoom.name}
-                </h3>
-
-                <p>
-                  {selectedRoom.description}
-                </p>
-
-                <span>
-                  {selectedRoom.details}
-                </span>
-
+                <p className="preview-label">SELECTED ROOM</p>
+                <h3>{selectedRoom.name}</h3>
+                <p>{selectedRoom.description}</p>
+                <span>{selectedRoom.details}</span>
 
                 <div className="room-price">
-
-                  <p>
-                    Room Price
-                  </p>
-
+                  <p>Room Price</p>
                   <h3>
-
-                    ₹
-                    {selectedRoom.price.toLocaleString(
-                      "en-IN"
-                    )}
-
-                    <span>
-                      {" / day"}
-                    </span>
-
+                    ₹{selectedRoom.price.toLocaleString("en-IN")}
+                    <span> / day</span>
                   </h3>
-
                 </div>
-
               </div>
-
             </div>
-
           )}
 
-
           <div className="room-row">
-
             <div className="room-field">
-
               <label htmlFor="room-date-input">
                 Admission Date *
               </label>
-
               <input
                 id="room-date-input"
                 type="date"
+                min={new Date().toISOString().split("T")[0]}
                 value={admissionDate}
-                onChange={(e) =>
-                  setAdmissionDate(e.target.value)
-                }
+                onChange={(e) => setAdmissionDate(e.target.value)}
                 required
               />
-
             </div>
 
-
             <div className="room-field">
-
               <label htmlFor="room-days-input">
                 Number of Days *
               </label>
-
               <input
                 id="room-days-input"
                 type="number"
                 min="1"
                 placeholder="Enter days"
                 value={days}
-                onChange={(e) =>
-                  setDays(e.target.value)
-                }
+                onChange={(e) => setDays(e.target.value)}
                 required
               />
-
             </div>
-
           </div>
 
-
           {selectedRoom && daysCount > 0 && (
-
             <div className="total-price">
-
               <div>
-
-                <p>
-                  Total Payable Amount
-                </p>
-
+                <p>Total Payable Amount</p>
                 <span>
-
-                  ₹
-                  {selectedRoom.price.toLocaleString(
-                    "en-IN"
-                  )}
-
+                  ₹{selectedRoom.price.toLocaleString("en-IN")}
                   {" × "}
-
-                  {daysCount}
-
-                  {" day"}
-
-                  {daysCount > 1 ? "s" : ""}
-
+                  {daysCount} day{daysCount > 1 ? "s" : ""}
                 </span>
-
               </div>
 
-
-              <h2>
-
-                ₹
-                {totalPrice.toLocaleString(
-                  "en-IN"
-                )}
-
-              </h2>
-
+              <h2>₹{totalPrice.toLocaleString("en-IN")}</h2>
             </div>
-
           )}
 
-
           <div className="room-field">
-
             <label htmlFor="room-contact-input">
               Contact Number *
             </label>
-
             <input
               id="room-contact-input"
               type="tel"
               placeholder="Enter phone number"
               value={contact}
-              onChange={(e) =>
-                setContact(e.target.value)
-              }
+              onChange={(e) => setContact(e.target.value)}
               required
             />
-
           </div>
 
-
           <div className="room-field">
-
             <label htmlFor="room-req-input">
               Special Requirements
             </label>
-
             <textarea
               id="room-req-input"
               rows="3"
               placeholder="Any dietary preferences or wheelchair assistance..."
               value={requirements}
-              onChange={(e) =>
-                setRequirements(e.target.value)
-              }
+              onChange={(e) => setRequirements(e.target.value)}
             />
-
           </div>
 
-
-          <button
-            type="submit"
-            className="room-book-button"
-          >
+          <button type="submit" className="room-book-button">
             Confirm Room Booking
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }

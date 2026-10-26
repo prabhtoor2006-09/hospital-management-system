@@ -1,0 +1,72 @@
+
+
+.staff-dashboard {
+  min-height: 80vh;
+  padding: 40px;
+  background: #070d24;
+  color: #cbd5e1;
+}
+
+.staff-dashboard h1 {
+  margin-bottom: 10px;
+  color: #ffffff;
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.staff-dashboard > p {
+  margin-bottom: 30px;
+  color: #94a3b8;
+}
+
+.staff-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.staff-card {
+  padding: 25px;
+  background: rgba(16, 26, 60, 0.75);
+  border: 1px solid rgba(129, 140, 248, 0.2);
+  border-radius: 14px;
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.staff-card:hover {
+  transform: translateY(-4px);
+  border-color: #818cf8;
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.2);
+}
+
+.staff-card h2 {
+  margin-bottom: 12px;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.staff-card p {
+  margin-bottom: 20px;
+  color: #94a3b8;
+}
+
+.staff-card a {
+  color: #818cf8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.staff-card a:hover {
+  color: #c084fc;
+}
+
+@media (max-width: 768px) {
+  .staff-dashboard {
+    padding: 24px 20px;
+  }
+
+  .staff-cards {
+    grid-template-columns: 1fr;
+  }
+}
